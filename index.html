@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hassan's — Link Hub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0f1a;
+      --surface: rgba(255,255,255,0.04);
+      --surface-hover: rgba(255,255,255,0.09);
+      --border: rgba(255,255,255,0.08);
+      --border-hover: rgba(255,255,255,0.18);
+      --text-primary: #f0f2ff;
+      --text-secondary: #8b90b8;
+      --accent: #6c63ff;
+      --accent2: #00d4aa;
+      --accent3: #ff6b6b;
+      --accent4: #ffa940;
+      --accent5: #40a9ff;
+      --glow: rgba(108,99,255,0.35);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 60px 20px 80px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* ─── Animated Background ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 10%, rgba(108,99,255,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 80% 80%, rgba(0,212,170,0.09) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 50% 50%, rgba(255,107,107,0.05) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .particles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      animation: float linear infinite;
+    }
+
+    @keyframes float {
+      0%   { transform: translateY(100vh) scale(0); opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 0.6; }
+      100% { transform: translateY(-20px) scale(1); opacity: 0; }
+    }
+
+    /* ─── Container ─── */
+    .container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 680px;
+    }
+
+    /* ─── Profile Header ─── */
+    .profile {
+      text-align: center;
+      margin-bottom: 44px;
+      animation: slideDown 0.7s ease both;
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .avatar-wrap {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 20px;
+    }
+
+    .avatar {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -1px;
+      box-shadow: 0 0 0 3px rgba(108,99,255,0.4), 0 0 30px rgba(108,99,255,0.25);
+      animation: pulse-ring 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse-ring {
+      0%, 100% { box-shadow: 0 0 0 3px rgba(108,99,255,0.4), 0 0 30px rgba(108,99,255,0.25); }
+      50%       { box-shadow: 0 0 0 7px rgba(108,99,255,0.15), 0 0 50px rgba(108,99,255,0.35); }
+    }
+
+    .status-dot {
+      position: absolute;
+      bottom: 5px;
+      right: 5px;
+      width: 14px;
+      height: 14px;
+      background: #2ecc71;
+      border-radius: 50%;
+      border: 2px solid var(--bg);
+      animation: blink 2s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.4; }
+    }
+
+    .profile h1 {
+      font-size: 1.65rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, #f0f2ff 30%, #a09cff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 6px;
+      letter-spacing: -0.5px;
+    }
+
+    .profile .tagline {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      font-weight: 400;
+      letter-spacing: 0.2px;
+    }
+
+    .badges {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .badge {
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 20px;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+    }
+
+    .badge-legal   { background: rgba(108,99,255,0.18); color: #a09cff; border: 1px solid rgba(108,99,255,0.3); }
+    .badge-hr      { background: rgba(0,212,170,0.12);  color: #00d4aa; border: 1px solid rgba(0,212,170,0.25); }
+    .badge-finance { background: rgba(255,169,64,0.12); color: #ffa940; border: 1px solid rgba(255,169,64,0.25); }
+
+    /* ─── Search Bar ─── */
+    .search-wrap {
+      position: relative;
+      margin-bottom: 36px;
+      animation: slideDown 0.7s 0.1s ease both;
+    }
+
+    .search-wrap i {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 13px 16px 13px 42px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      color: var(--text-primary);
+      font-size: 0.9rem;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      transition: border 0.25s, box-shadow 0.25s, background 0.25s;
+    }
+
+    .search-input::placeholder { color: var(--text-secondary); }
+
+    .search-input:focus {
+      border-color: rgba(108,99,255,0.5);
+      background: rgba(255,255,255,0.07);
+      box-shadow: 0 0 0 3px rgba(108,99,255,0.12);
+    }
+
+    /* ─── Section Label ─── */
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 14px;
+      padding-left: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ─── Link Grid & Cards ─── */
+    .link-grid {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .link-grid.cols-2 {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .link-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      text-decoration: none;
+      color: var(--text-primary);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.25s, border-color 0.25s, transform 0.2s, box-shadow 0.25s;
+      animation: fadeUp 0.5s ease both;
+    }
+
+    .link-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--card-accent, rgba(108,99,255,0.08)) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      border-radius: inherit;
+    }
+
+    .link-card:hover {
+      background: var(--surface-hover);
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.06);
+    }
+
+    .link-card:hover::before { opacity: 1; }
+
+    .link-card:active { transform: translateY(0) scale(0.98); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .card-text {
+      flex: 1;
+      position: relative;
+      z-index: 1;
+      min-width: 0;
+    }
+
+    .card-text .title {
+      font-size: 0.93rem;
+      font-weight: 600;
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-text .desc {
+      font-size: 0.76rem;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-arrow {
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+      position: relative;
+      z-index: 1;
+      transition: transform 0.2s, color 0.2s;
+    }
+
+    .link-card:hover .card-arrow {
+      transform: translateX(3px);
+      color: var(--text-primary);
+    }
+
+    /* ─── Compact card for 2-col ─── */
+    .link-card.compact {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 18px 16px 16px;
+      gap: 10px;
+    }
+
+    .link-card.compact .card-icon { width: 38px; height: 38px; font-size: 1rem; }
+    .link-card.compact .card-arrow { position: absolute; top: 16px; right: 16px; }
+
+    /* ─── Color Themes ─── */
+    .c-purple { background: linear-gradient(135deg, #6c63ff, #8b5cf6); }
+    .c-teal   { background: linear-gradient(135deg, #00d4aa, #00b4d8); }
+    .c-red    { background: linear-gradient(135deg, #ff6b6b, #ee5a24); }
+    .c-gold   { background: linear-gradient(135deg, #ffa940, #e67e22); }
+    .c-blue   { background: linear-gradient(135deg, #40a9ff, #1677ff); }
+    .c-pink   { background: linear-gradient(135deg, #f72585, #b5179e); }
+    .c-green  { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+    .c-slate  { background: linear-gradient(135deg, #748ffc, #5c7cfa); }
+    .c-orange { background: linear-gradient(135deg, #fd7e14, #e8590c); }
+    .c-cyan   { background: linear-gradient(135deg, #22d3ee, #0891b2); }
+
+    /* ─── Stats Row ─── */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 32px;
+      animation: fadeUp 0.5s 0.2s ease both;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      text-align: center;
+      transition: background 0.25s, border-color 0.25s;
+    }
+
+    .stat-card:hover {
+      background: var(--surface-hover);
+      border-color: var(--border-hover);
+    }
+
+    .stat-card .stat-num {
+      font-size: 1.5rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, #f0f2ff, #a09cff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .stat-card .stat-lbl {
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+      margin-top: 3px;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+    }
+
+    /* ─── Footer ─── */
+    .footer {
+      margin-top: 48px;
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      position: relative;
+      z-index: 1;
+    }
+
+    .footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    /* ─── Hidden for search ─── */
+    .link-card.hidden { display: none !important; }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 520px) {
+      .link-grid.cols-2 { grid-template-columns: 1fr; }
+      .stats-row { grid-template-columns: repeat(3, 1fr); }
+      body { padding: 40px 14px 60px; }
+    }
+
+    /* ─── Tooltip ─── */
+    .link-card[data-tip]:hover::after {
+      content: attr(data-tip);
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(20,22,40,0.95);
+      color: #e0e2f0;
+      padding: 5px 12px;
+      border-radius: 8px;
+      font-size: 0.72rem;
+      white-space: nowrap;
+      border: 1px solid var(--border);
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    /* ─── Scroll indicator ─── */
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      z-index: 999;
+      transition: width 0.1s linear;
+      border-radius: 0 2px 2px 0;
+    }
+
+    /* ─── Theme toggle ─── */
+    .theme-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 100;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.25s;
+    }
+
+    .theme-btn:hover {
+      background: var(--surface-hover);
+      color: var(--text-primary);
+      border-color: var(--border-hover);
+    }
+
+    /* ─── Light mode ─── */
+    body.light {
+      --bg: #f0f2ff;
+      --surface: rgba(0,0,0,0.04);
+      --surface-hover: rgba(0,0,0,0.07);
+      --border: rgba(0,0,0,0.09);
+      --border-hover: rgba(0,0,0,0.18);
+      --text-primary: #1a1c2e;
+      --text-secondary: #5a5f80;
+      --glow: rgba(108,99,255,0.2);
+    }
+
+    body.light .search-input { background: rgba(0,0,0,0.04); }
+    body.light .search-input:focus { background: rgba(0,0,0,0.07); }
+  </style>
+  <!-- favicon -->
+	<link rel="apple-touch-icon" sizes="180x180" href="https://hassan.bd/img/ico/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="https://hassan.bd/img/ico/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="https://hassan.bd/img/ico/favicon-16x16.png">
+	<link rel="manifest" href="https://hassan.bd/img/ico/site.webmanifest">
+	<link rel="mask-icon" href="https://hassan.bd/img/ico/safari-pinned-tab.svg" color="#5bbad5">
+	<link rel="shortcut icon" href="https://hassan.bd/img/ico/favicon.ico">
+	<meta name="msapplication-TileColor" content="#da532c">
+	<meta name="msapplication-config" content="https://hassan.bd/img/ico/browserconfig.xml">
+	<meta name="theme-color" content="#ffffff">
+    </head>
+<body>
+
+<!-- Scroll progress -->
+<div class="scroll-progress" id="scrollBar"></div>
+
+<!-- Theme toggle -->
+<button class="theme-btn" id="themeBtn" title="Toggle theme"><i class="fa-solid fa-circle-half-stroke"></i></button>
+
+<!-- Floating particles -->
+<div class="particles" id="particles"></div>
+
+<div class="container">
+
+  <!-- ── Profile ── -->
+  <div class="profile">
+    <div class="avatar-wrap">
+      <div class="avatar">SHA</div>
+      <div class="status-dot" title="Available"></div>
+    </div>
+    <h1>Syed Hassan Ali</h1>
+    <p class="tagline">Legal &amp; HR Specialist · Financial Analyst · Dhaka, BD</p>
+    <div class="badges">
+      <span class="badge badge-legal"><i class="fa-solid fa-scale-balanced"></i> &nbsp;Legal</span>
+      <span class="badge badge-hr"><i class="fa-solid fa-people-group"></i> &nbsp;HR</span>
+      <span class="badge badge-finance"><i class="fa-solid fa-chart-line"></i> &nbsp;Finance</span>
+    </div>
+  </div>
+
+  <!-- ── Search ── -->
+  <div class="search-wrap">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input class="search-input" type="text" id="searchInput" placeholder="Search links…" autocomplete="off"/>
+  </div>
+
+  <!-- ── Quick Stats ── -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-num">12+</div>
+      <div class="stat-lbl">Platforms</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">3</div>
+      <div class="stat-lbl">Domains</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">BD</div>
+      <div class="stat-lbl">Location</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════ -->
+  <!-- SECTION 1 — Professional Networks -->
+  <!-- ══════════════════════════════════ -->
+  <div class="section-label" data-section="professional">Professional Networks</div>
+  <div class="link-grid" id="grid-professional">
+    
+	<a class="link-card" href="https://YOUR-PORTFOLIO-SITE.com" target="_blank" data-name="portfolio" data-tip="Personal website">
+      <div class="card-icon c-purple"><i class="fa-solid fa-briefcase" style="color:#fff"></i></div>
+      <div class="card-text">
+        <div class="title">Portfolio</div>
+        <div class="desc">Work, case studies &amp; CV</div>
+      </div>
+      <i class="fa-solid fa-arrow-right card-arrow"></i>
+    </a>
+	
+    <a class="link-card" href="https://www.linkedin.com/in/YOUR-PROFILE" target="_blank" data-name="linkedin" data-tip="Open LinkedIn Profile">
+      <div class="card-icon c-blue"><i class="fa-brands fa-linkedin-in" style="color:#fff"></i></div>
+      <div class="card-text">
+        <div class="title">LinkedIn</div>
+        <div class="desc">Professional network &amp; portfolio</div>
+      </div>
+      <i class="fa-solid fa-arrow-right card-arrow"></i>
+    </a>
+
+    <a class="link-card" href="https://github.com/YOUR-USERNAME" target="_blank" data-name="github" data-tip="Open GitHub">
+      <div class="card-icon c-slate"><i class="fa-brands fa-github" style="color:#fff"></i></div>
+      <div class="card-text">
+        <div class="title">GitHub</div>
+        <div class="desc">Repositories &amp; projects</div>
+      </div>
+      <i class="fa-solid fa-arrow-right card-arrow"></i>
+    </a>
+
+    
+
+  </div>
+
+  <!-- ══════════════════════════════ -->
+  <!-- SECTION 2 — Legal & Compliance -->
+  <!-- ══════════════════════════════ -->
+  <div class="section-label" data-section="legal">Legal &amp; Compliance</div>
+  <div class="link-grid cols-2" id="grid-legal">
+
+    <a class="link-card compact" href="https://bdlaws.minlaw.gov.bd" target="_blank" data-name="bdlaws" data-tip="Bangladesh Laws">
+      <div class="card-icon c-purple"><i class="fa-solid fa-scale-balanced" style="color:#fff"></i></div>
+      <div class="card-text">
+        <div class="title">BD Laws</div>
+        <div class="desc">Ministry of Law portal</div>
+      </div>
+      <i class="fa-solid fa-arrow-up-right-from-square card-arrow"></i>
+    </a>
+
+    <a class="link-card compact" href="https://www.ibanet.org" target="_blank" data-name="iba" data-tip="International Bar Association">
+      <div class="card-icon c-red"><i class="fa-solid fa-gavel" style="color:#fff"></i></div>
+      <div class="card-text">
+        <div class="title">IBA</div>
+        <div class="desc">Intl Bar Association</div>
+      </div>
+      <i class="fa-solid fa-arrow-up-right-from-square card-arrow"></i>
+    </a>
+
+    <a class="link-card compact" href="https://www.lexisnexis.com" target="_blank" data-name="lexisnexis" data-tip="LexisNexis Research">
+      <div class="card-icon c-teal"><i class="fa-solid fa-book-open" style="color:#fff"></i></div>
+      <div class="card-text">
+        <div class="title">LexisNexis</div>
+        <div class="desc">Legal research platform</div>
+      </div>
+      <i class="fa-solid fa-arrow-up-right-from-square card-arrow"></i>
+    </a>
+
+    <a class="link-card compact" href="https://www.westlaw.com" target="_blank" data-name="westlaw" data-tip="Westlaw">
+      <div class="card-icon c-orange"><i class="fa-solid fa-landmark" style="color:#fff"></i></div>
+      <div class="card-text">
+        <div class="title">Westlaw</div>
+        <div class="desc">Case law &amp; statutes</div>
+      </div>
+      <i class="fa-solid fa-arrow-up-right-from-square card-arrow"></i>
+    </a>
+
+  </div>
+
+  <!-- ════════════════════════ -->
+  <!-- SECTION 3 — HR & People  -->
+  <!-- ════════════════════════ -->
+  <div class="section-label" data-section="hr">HR &amp; People</div>
+  <div class="link-grid cols-2" id="grid-hr">
+
+    <a class="link-card compact" href="https://www.shrm.org" target="_blank" data-name="shrm" data-tip="SHRM">
+      <div class="card-icon c-teal"><i class="fa-solid fa-people-group" style="color:#fff"></i></div>
+      <div class="card-text">
+        <div class="title">SHRM</div>
+        <div class="desc">HR policy resources</div>
+      </div>
+      <i class="fa-solid fa-arrow-up-right-from-square card-arrow"></i>
+    </a>
+
+    <a class="link-card compact" href="https://www.ilo.org" target="_blank" data-name="ilo" data-tip="ILO">
+      <div class="card-icon c-blue"><i class="fa-solid fa-handshake" style="color:#fff"></i></div>
+      <div class="card-text">
+        <div class="title">ILO</div>
+        <div class="desc">Labour standards</div>
+      </div>
+      <i class="fa-solid fa-arrow-up-right-from-square card-arrow"></i>
+    </a>
+
+    <a class="link-card compact" href="https://www.bamboohr.com" target="_blank" data-name="bamboohr" data-tip="BambooHR">
+      <div class="card-icon c-green"><i class="fa-solid fa-seedling" style="color:#fff"></i></div>
+      <div class="card-text">
+        <div class="title">BambooHR</div>
+        <div class="desc">HR management system</div>
+      </div>
+      <i class="fa-solid fa-arrow-up-right-from-square card-arrow"></i>
+    </a>
+
+    <a class="link-card compact" href="https://www.workable.com" target="_blank" data-name="workable" data-tip="Workable ATS">
+      <div class="card-icon c-pink"><i class="fa-solid fa-user-plus" style="color:#fff"></i></div>
+      <div class="card-text">
+        <div class="title">Workable</div>
+        <div class="desc">Recruitment &amp; ATS</div>
+      </div>
+      <i class="fa-solid fa-arrow-up-right-from-square card-arrow"></i>
+    </a>
+
+  </div>
+
+  <!-- ══════════════════════════ -->
+  <!-- SECTION 4 — Finance Tools  -->
+  <!-- ══════════════════════════ -->
+  <div class="section-label" data-section="finance">Finance &amp; Markets</div>
+  <div class="link-grid" id="grid-finance">
+
+    <a class="link-card" href="https://finance.yahoo.com" target="_blank" data-name="yahoo finance" data-tip="Yahoo Finance">
+      <div class="card-icon c-purple"><i class="fa-solid fa-chart-candlestick" style="color:#fff"></i></div>
+      <div class="card-text">
+        <div class="title">Yahoo Finance</div>
+        <div class="desc">Market data, quotes &amp; news</div>
+      </div>
+      <i class="fa-solid fa-arrow-right card-arrow"></i>
+    </a>
+
+    <a class="link-card" href="https://www.tradingview.com" target="_blank" data-name="tradingview" data-tip="TradingView Charts">
+      <div class="card-icon c-gold"><i class="fa-solid fa-chart-line" style="color:#fff"></i></div>
+      <div class="card-text">
+        <div class="title">TradingView</div>
+        <div class="desc">Advanced charting &amp; analysis</div>
+      </div>
+      <i class="fa-solid fa-arrow-right card-arrow"></i>
+    </a>
+
+    <a class="link-card" href="https://www.bloomberg.com" target="_blank" data-name="bloomberg" data-tip="Bloomberg Terminal">
+      <div class="card-icon c-red"><i class="fa-solid fa-newspaper" style="color:#fff"></i></div>
+      <div class="card-text">
+        <div class="title">Bloomberg</div>
+        <div class="desc">Financial news &amp; data</div>
+      </div>
+      <i class="fa-solid fa-arrow-right card-arrow"></i>
+    </a>
+
+  </div>
+
+  <!-- ════════════════════════ -->
+  <!-- SECTION 5 — Productivity  -->
+  <!-- ════════════════════════ -->
+  <div class="section-label" data-section="productivity">Productivity</div>
+  <div class="link-grid cols-2" id="grid-productivity">
+
+    <a class="link-card compact" href="https://notion.so" target="_blank" data-name="notion" data-tip="Notion Workspace">
+      <div class="card-icon c-slate"><i class="fa-solid fa-file-pen" style="color:#fff"></i></div>
+      <div class="card-text">
+        <div class="title">Notion</div>
+        <div class="desc">Docs &amp; workspace</div>
+      </div>
+      <i class="fa-solid fa-arrow-up-right-from-square card-arrow"></i>
+    </a>
+
+    <a class="link-card compact" href="https://drive.google.com" target="_blank" data-name="google drive" data-tip="Google Drive">
+      <div class="card-icon c-gold"><i class="fa-brands fa-google-drive" style="color:#fff"></i></div>
+      <div class="card-text">
+        <div class="title">Google Drive</div>
+        <div class="desc">Files &amp; shared docs</div>
+      </div>
+      <i class="fa-solid fa-arrow-up-right-from-square card-arrow"></i>
+    </a>
+
+    <a class="link-card compact" href="https://calendar.google.com" target="_blank" data-name="google calendar" data-tip="Google Calendar">
+      <div class="card-icon c-blue"><i class="fa-solid fa-calendar-check" style="color:#fff"></i></div>
+      <div class="card-text">
+        <div class="title">Calendar</div>
+        <div class="desc">Schedule &amp; meetings</div>
+      </div>
+      <i class="fa-solid fa-arrow-up-right-from-square card-arrow"></i>
+    </a>
+
+    <a class="link-card compact" href="https://mail.google.com" target="_blank" data-name="gmail" data-tip="Gmail">
+      <div class="card-icon c-red"><i class="fa-solid fa-envelope" style="color:#fff"></i></div>
+      <div class="card-text">
+        <div class="title">Gmail</div>
+        <div class="desc">Email &amp; communications</div>
+      </div>
+      <i class="fa-solid fa-arrow-up-right-from-square card-arrow"></i>
+    </a>
+
+  </div>
+
+  <!-- ════════════════════ -->
+  <!-- SECTION 6 — Social    -->
+  <!-- ════════════════════ -->
+  <div class="section-label" data-section="social">Social</div>
+  <div class="link-grid cols-2" id="grid-social">
+
+    <a class="link-card compact" href="https://twitter.com/YOUR-HANDLE" target="_blank" data-name="twitter x" data-tip="Twitter / X">
+      <div class="card-icon" style="background:linear-gradient(135deg,#000,#333)"><i class="fa-brands fa-x-twitter" style="color:#fff"></i></div>
+      <div class="card-text">
+        <div class="title">Twitter / X</div>
+        <div class="desc">Thoughts &amp; updates</div>
+      </div>
+      <i class="fa-solid fa-arrow-up-right-from-square card-arrow"></i>
+    </a>
+
+    <a class="link-card compact" href="https://facebook.com/YOUR-PAGE" target="_blank" data-name="facebook" data-tip="Facebook">
+      <div class="card-icon c-blue"><i class="fa-brands fa-facebook-f" style="color:#fff"></i></div>
+      <div class="card-text">
+        <div class="title">Facebook</div>
+        <div class="desc">Page &amp; community</div>
+      </div>
+      <i class="fa-solid fa-arrow-up-right-from-square card-arrow"></i>
+    </a>
+
+    <a class="link-card compact" href="https://wa.me/8801XXXXXXXXX" target="_blank" data-name="whatsapp" data-tip="WhatsApp">
+      <div class="card-icon c-green"><i class="fa-brands fa-whatsapp" style="color:#fff"></i></div>
+      <div class="card-text">
+        <div class="title">WhatsApp</div>
+        <div class="desc">Direct message</div>
+      </div>
+      <i class="fa-solid fa-arrow-up-right-from-square card-arrow"></i>
+    </a>
+
+    <a class="link-card compact" href="https://t.me/YOUR-USERNAME" target="_blank" data-name="telegram" data-tip="Telegram">
+      <div class="card-icon c-cyan"><i class="fa-brands fa-telegram" style="color:#fff"></i></div>
+      <div class="card-text">
+        <div class="title">Telegram</div>
+        <div class="desc">Channel &amp; chat</div>
+      </div>
+      <i class="fa-solid fa-arrow-up-right-from-square card-arrow"></i>
+    </a>
+
+  </div>
+
+</div><!-- /container -->
+
+<div class="footer">
+  Built with ♥ by <strong>Syed Hassan Ali</strong> &middot; Dhaka, BD &middot; 2026
+</div>
+
+<script>
+  // ── Particles
+  const pEl = document.getElementById('particles');
+  for (let i = 0; i < 40; i++) {
+    const p = document.createElement('div');
+    p.classList.add('particle');
+    const size = Math.random() * 3 + 1;
+    p.style.cssText = `
+      left: ${Math.random()*100}%;
+      width: ${size}px; height: ${size}px;
+      animation-duration: ${8 + Math.random()*14}s;
+      animation-delay: ${Math.random()*10}s;
+    `;
+    pEl.appendChild(p);
+  }
+
+  // ── Scroll progress bar
+  window.addEventListener('scroll', () => {
+    const s = document.documentElement;
+    const pct = (s.scrollTop / (s.scrollHeight - s.clientHeight)) * 100;
+    document.getElementById('scrollBar').style.width = pct + '%';
+  });
+
+  // ── Live search filter
+  document.getElementById('searchInput').addEventListener('input', function () {
+    const q = this.value.trim().toLowerCase();
+    document.querySelectorAll('.link-card').forEach(card => {
+      const name = (card.dataset.name || '').toLowerCase();
+      const title = card.querySelector('.title')?.textContent.toLowerCase() || '';
+      const desc  = card.querySelector('.desc')?.textContent.toLowerCase() || '';
+      card.classList.toggle('hidden', q && !name.includes(q) && !title.includes(q) && !desc.includes(q));
+    });
+  });
+
+  // ── Staggered animation delay
+  document.querySelectorAll('.link-card').forEach((c, i) => {
+    c.style.animationDelay = (i * 0.06) + 's';
+  });
+
+  // ── Theme toggle
+  const themeBtn = document.getElementById('themeBtn');
+  themeBtn.addEventListener('click', () => {
+    document.body.classList.toggle('light');
+    const icon = themeBtn.querySelector('i');
+    icon.className = document.body.classList.contains('light')
+      ? 'fa-solid fa-moon'
+      : 'fa-solid fa-circle-half-stroke';
+  });
+
+  // ── Ripple effect on click
+  document.querySelectorAll('.link-card').forEach(card => {
+    card.addEventListener('click', function(e) {
+      const ripple = document.createElement('span');
+      const rect = this.getBoundingClientRect();
+      ripple.style.cssText = `
+        position:absolute; border-radius:50%;
+        background:rgba(255,255,255,0.15);
+        width:10px; height:10px;
+        left:${e.clientX - rect.left - 5}px;
+        top:${e.clientY - rect.top - 5}px;
+        transform:scale(0); pointer-events:none;
+        animation: ripple 0.5s ease forwards;
+      `;
+      this.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 600);
+    });
+  });
+
+  const style = document.createElement('style');
+  style.textContent = '@keyframes ripple { to { transform:scale(25); opacity:0; } }';
+  document.head.appendChild(style);
+</script>
+</body>
+</html>
